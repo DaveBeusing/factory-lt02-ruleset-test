@@ -1,0 +1,9 @@
+name: LT-02 synthetic check
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Synthetic LT-02 check passed
