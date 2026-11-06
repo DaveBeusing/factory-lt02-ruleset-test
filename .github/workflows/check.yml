@@ -1,6 +1,8 @@
 name: LT-02 synthetic check
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
   push:
     branches: [master, fixture-change]
     paths: ['.github/workflows/check.yml']
