@@ -2,7 +2,7 @@ name: LT-02 synthetic check
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [master, fixture-change]
     paths: ['.github/workflows/check.yml']
 permissions:
   contents: read
