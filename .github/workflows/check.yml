@@ -8,12 +8,12 @@ on:
     paths: ['.github/workflows/check.yml']
 permissions:
   contents: read
-  statuses: write
+  checks: write
 jobs:
-  emit-fixture-status:
+  emit-fixture-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Report synthetic status from GitHub Actions
+      - name: Report synthetic check run from GitHub Actions
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" -f state=success -f context=build-and-test -f description=Synthetic-trusted-source --jq .id
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/check-runs" -f name=build-and-test -f head_sha="$GITHUB_SHA" -f status=completed -f conclusion=success --jq .id
