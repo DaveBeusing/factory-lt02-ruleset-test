@@ -1,13 +1,25 @@
 name: LT-02 synthetic check
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [bypass-base]
+    paths: [run-ci.txt]
   push:
     branches: [master]
     paths: ['.github/workflows/check.yml']
 permissions:
   contents: read
+  statuses: write
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
       - run: echo Synthetic LT-02 check passed
+  emit-control-status:
+    if: github.event_name == 'workflow_dispatch' && github.ref_name == 'bypass-candidate'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish the isolated test status
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" -f state=success -f context=build-and-test -f description=Synthetic-trusted-source --jq .id
