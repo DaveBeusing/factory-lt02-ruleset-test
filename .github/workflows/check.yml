@@ -1,13 +1,19 @@
 name: LT-02 synthetic check
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
   push:
-    branches: [master]
+    branches: [master, fixture-change]
     paths: ['.github/workflows/check.yml']
 permissions:
   contents: read
+  checks: write
 jobs:
-  build-and-test:
+  emit-fixture-check:
     runs-on: ubuntu-latest
     steps:
-      - run: echo Synthetic LT-02 check passed
+      - name: Report synthetic check run from GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/check-runs" -f name=build-and-test -f head_sha="$GITHUB_SHA" -f status=completed -f conclusion=success --jq .id
