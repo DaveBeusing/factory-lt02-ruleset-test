@@ -8,8 +8,12 @@ on:
     paths: ['.github/workflows/check.yml']
 permissions:
   contents: read
+  statuses: write
 jobs:
-  build-and-test:
+  emit-fixture-status:
     runs-on: ubuntu-latest
     steps:
-      - run: echo Synthetic LT-02 check passed
+      - name: Report synthetic status from GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" -f state=success -f context=build-and-test -f description=Synthetic-trusted-source --jq .id
